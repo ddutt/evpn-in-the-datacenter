@@ -1,6 +1,7 @@
 
+auto all
+
 #loopback interface
-auto lo
 iface lo inet loopback
   address 10.0.0.13/32
   clagd-vxlan-anycast-ip 10.0.0.134
@@ -8,57 +9,48 @@ iface lo inet loopback
 
 # Management interface
 
-auto eth0
 iface eth0 inet dhcp
     vrf mgmt
 
-auto mgmt
 iface mgmt
     address 127.0.0.1/8
     vrf-table auto
 
 # Port to Server03
-auto swp1
 iface swp1
   alias to Server03
   # This is required for Vagrant only
   post-up ip link set swp1 promisc on
 
 # Port to Server04
-auto swp2
 iface swp2
   alias to Server04
   # This is required for Vagrant only
   post-up ip link set swp2 promisc on
 
 # Port to Leaf04
-auto swp49
 iface swp49
   alias to Leaf04
   # This is required for Vagrant only
   post-up ip link set swp49 promisc on
 
 # Port to Leaf04
-auto swp50
 iface swp50
   alias to Leaf04
   # This is required for Vagrant only
   post-up ip link set swp50 promisc on
 
 # Port to Spine01
-auto swp51
 iface swp51
   mtu 9216
   alias to Spine01
 
 # Port to Spine02
-auto swp52
 iface swp52
   mtu 9216
   alias to Spine02
 
 # CLAG Peerlink bond
-auto peerlink
 iface peerlink
   mtu 9000
   bond-slaves swp49 swp50
@@ -66,7 +58,6 @@ iface peerlink
 # CLAG Peerlink L2 interface.
 # This creates VLAN 4094 that only lives on the peerlink bond
 # No other interface will be aware of VLAN 4094
-auto peerlink.4094
 iface peerlink.4094
   address 169.254.1.1/30
   clagd-peer-ip 169.254.1.2
@@ -75,7 +66,6 @@ iface peerlink.4094
   clagd-priority 100
 
 # Bond to Server03
-auto bond03
 iface bond03
   mtu 9000
   bond-slaves swp1
@@ -83,7 +73,6 @@ iface bond03
   clag-id 3
 
 # Bond to Server04
-auto bond04
 iface bond04
   mtu 9000
   bond-slaves swp2
@@ -91,7 +80,6 @@ iface bond04
   clag-id 4
 
 # Define the bridge for STP
-auto bridge
 iface bridge
   bridge-vlan-aware yes
   # bridge-ports includes all ports related to VxLAN and CLAG.
@@ -101,7 +89,6 @@ iface bridge
   bridge-pvid 1
 
 # VxLAN Tunnel for Server1-Server3 (Vlan 13)
-auto vni13
 iface vni13
   mtu 9000
   vxlan-id 13
@@ -112,7 +99,6 @@ iface vni13
   mstpctl-portbpdufilter yes
 
 #VxLAN Tunnel for Server2-Server4 (Vlan 24)
-auto vni24
 iface vni24
   mtu 9000
   vxlan-id 24
@@ -123,3 +109,11 @@ iface vni24
   mstpctl-portbpdufilter yes
   bridge-arp-nd-suppress on
 
+# SVI without IP Addresses for ARP/ND Suppression
+iface vlan13
+  vlan-id 13
+  vlan-raw-device bridge
+
+iface vlan24
+  vlan-id 24
+  vlan-raw-device bridge
