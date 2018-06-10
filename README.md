@@ -1,18 +1,18 @@
-# EVPN in the Datacenter 
+# EVPN in the Data Center 
 ![Reference Topology](./documentation/cldemo_topology.png "Reference Topology")
 
 
-This repository contains configuration code with Ansible playbooks to deploy EVPN in the sample Clos topology shown in figure 6-1 of chapter 6 of the O'Reilly book 'EVPN in the Datacenter'. 
+This repository contains configuration code with Ansible playbooks to deploy EVPN in the sample Clos topology shown in figure 6-1 of chapter 6 of the O'Reilly book 'EVPN in the Data Center'. 
 
 Using this assumes two critical pieces of software are installed on your computer, specifically:
 * [Vagrant](http://www.vagrantup.com)
 * [Virtualbox](http://www.virtualbox.org) (or if you're on a Linux machine, [KVM](https://www.linux-kvm.org/page/Main_Page))
 
-The section on [Prerequisies](#prerequisites-and-getting-started) describes how to install these pieces of software on your desktop/laptop. Running the entire simulation uses up at least 8GB of RAM on your computer. There are two configuration options included in this repository:
-* Centralized Routing -- This uses the exit leaves exit01/exit02 as EVPN routers while the leaves are all doing EVPN bridging only
-* Distributed Routing -- All the leaves do both EVPN routing and bridging, while the exit leaves provide the default route
+The section on [Prerequisies](#prerequisites-and-getting-started) describes how to install these pieces of software on your desktop/laptop. Running the entire simulation uses up at least 8GB of RAM on the machine it is running on. 
 
-Further details are provided below for each of these.
+There are two demo options included in this repository:
+* **[Centralized Routing](./ansible/cldemo-evpn-centralized)** -- This uses the exit leaves exit01/exit02 as EVPN routers while the leaves do EVPN bridging only
+* **[Distributed Routing](./ansible/cldemo-evpn-distributed)** -- All the leaves do both EVPN routing and bridging, while the exit leaves provide the default route
 
 The Ansible playbooks are just glorified file copies. These playbooks are not meant to demonstrate network automation, but to keep things simple so that anyone can follow them. Basically, the playbooks copy the files provided under the config directory of each of the demos to the specific machines and reload interfaces and FRR. You can look at the configurations directly in the config directory for the specific machine without launching the VMs as well. Launching the VMs allows you to see the actual working of EVPN in a somewhat realistic, yet simple topology. You can also modify the configuration and see the effects of those changes. 
 
@@ -22,14 +22,11 @@ The Ansible playbooks are just glorified file copies. These playbooks are not me
   * [Windows](./documentation/windows)
   * [MacOS](./documentation/macos/)
   * [Linux (Ubuntu 16.04)](./documentation/linux)
-* [Available Demos](#available-demos)
 * [Frequently Asked Questions](#frequently-asked-questions)
-  * [What is CLdemo-Vagrant?](#what-is-cldemo-vagrant)
-  * [What is the Reference Topology?](#what-is-the-reference-topology)
-  * [What is Cumulus VX?](#what-is-cumulus-vx)
   * [What is Vagrant?](#what-is-vagrant)
   * [What is a Vagrantfile?](#what-is-a-vagrantfile)
   * [What is Libvirt/KVM?](#what-is-libvirtkvm)i
+  * [What is Cumulus VX?](#what-is-cumulus-vx)
   * [Which Software Versions should I use?](#which-software-versions-should-i-use)
   * [What is the Out of Band Server Doing?](#what-is-the-out-of-band-server-doing)
   * [How are IP addresses Allocated?](#how-are-ip-addresses-allocated)
@@ -48,39 +45,7 @@ The Ansible playbooks are just glorified file copies. These playbooks are not me
 * [MacOS](./documentation/macos)
 * [Linux (Ubuntu 16.04)](./documentation/linux/)
 
-## Available Demos
-
-Once you've followed the above prerequisite/getting-started instructions for your system, 
-you are able to run either of the demos below. 
-
-Demos are built upon the Reference Topology as a starting point and then layer specific 
-device configuration on top.
-
-* Centralized Routing -- This is under the cldemo-evpn-centralized directory on the oob-mgmt-server under the directory /home/cumulus/ansible
-* Distributed Routing -- This is under the cldemo-evpn-distributed directory on the oob-mgmt-server under the directory /home/cumulus/ansible
-
-
 ## Frequently Asked Questions
-
-### What is CLDEMO-VAGRANT?
-CLDEMO-VAGRANT is the name of this repository which provides a consistent 
-physical topology of VMs which are cabled together in a configuration 
-we refer to as the [Reference Topology](#what-is-the-reference-topology). This topology provides a 
-consistent simulation topology upon which lots of different configurations 
-can be overlaid. The [individual demos](#available-demos) provide interface and routing protocol 
-configurations which are applied to this simulation topology.
-
-### What is the Reference Topology?
-The Cumulus Linux Demo Framework is built upon a [Vagrantfile](#what-is-a-vagrantfile) which builds 
-the Reference Topology. Using this topology, it is possible to demonstrate 
-any feature in Cumulus Linux. It may not be necessary to use all links or 
-all devices but they're present if needed by a particular demo.
-
-This framework of demos is built on a two-tier spine-leaf [Clos network](https://en.wikipedia.org/wiki/Clos_network) with a
-dedicated out-of-band management network. The Reference Topology built in 
-this repository is used for all Cumulus Networks documentation, demos, 
-and course materials, so many demos will require you to build a topology 
-using the code available in this repository.
 
 ### What is Cumulus VX?
 This repository makes use of [Cumulus VX](https://cumulusnetworks.com/cumulus-vx/) which is a virtual machine
@@ -247,7 +212,7 @@ conflict with Virtualbox's ability to create 64-bit VMs.**
 	ping 10.1.3.103
 	ping 10.2.4.104
 	
-For a smaller topology, replace 'vagrant up' with 'vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 internet server01 server03'. This takes up at least 4GB of RAN.	
+For a smaller topology, replace `vagrant up` with `vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 server01 server03`. This takes up at least 4GB of RAN.	
 
 ---
 
