@@ -56,10 +56,12 @@ iface swp44
 
 auto swp51
 iface swp51
-
+  mtu 9216
+  
 auto swp52
 iface swp52
-
+  mtu 9216
+  
 auto vxlan4001
 iface vxlan4001
 	vxlan-id 104001
