@@ -111,9 +111,13 @@ iface vni24
 
 # SVI without IP Addresses for ARP/ND Suppression
 iface vlan13
+  ip-forward off
+  ip6-forward off
   vlan-id 13
   vlan-raw-device bridge
 
 iface vlan24
+  ip-forward off
+  ip6-forward off
   vlan-id 24
   vlan-raw-device bridge
