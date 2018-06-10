@@ -1,0 +1,116 @@
+auto lo
+iface lo inet loopback
+	address 10.0.0.41/32
+	clagd-vxlan-anycast-ip 10.0.0.135
+
+auto eth0
+iface eth0 inet dhcp
+	vrf mgmt
+
+auto evpn-vrf
+iface evpn-vrf
+	address 10.0.0.41/32
+	vrf-table auto
+
+auto mgmt
+iface mgmt
+	address 127.0.0.1/8
+	vrf-table auto
+
+auto internet-vrf
+iface internet-vrf
+	address 10.0.0.41/32
+	vrf-table auto
+
+# CLAG Peerlink bond
+auto peerlink
+iface peerlink
+  mtu 9000
+  bond-slaves swp49 swp50
+
+# CLAG Peerlink L2 interface.
+# This creates VLAN 4094 that only lives on the peerlink bond
+# No other interface will be aware of VLAN 4094
+auto peerlink.4094
+iface peerlink.4094
+  address 169.254.1.1/30
+  clagd-peer-ip 169.254.1.2
+  clagd-backup-ip 10.0.0.42
+  clagd-sys-mac 44:39:39:ff:40:96
+  clagd-priority 100
+
+auto bridge
+iface bridge
+	bridge-vlan-aware yes
+	bridge-vids 1-4, 13, 24
+	bridge-ports swp1 vni13 vni24 peerlink
+
+auto swp1
+iface swp1
+
+auto swp1.2
+iface swp1.2
+	address 169.254.254.1/30
+
+auto swp1.3
+iface swp1.3
+	address 169.254.254.5/30
+	vrf evpn-vrf
+
+auto swp1.4
+iface swp1.4
+	address 169.254.254.9/30
+	vrf internet-vrf
+
+auto swp44
+iface swp44
+	vrf internet-vrf
+
+auto swp51
+iface swp51
+
+auto swp52
+iface swp52
+
+auto vlan13
+iface vlan13
+    address 10.1.3.11/24
+    address-virtual 44:39:39:ff:00:13 10.1.3.1/24
+    vlan-id 13
+    vlan-raw-device bridge
+    vrf evpn-vrf
+
+auto vlan24
+iface vlan24
+    address 10.2.4.11/24
+    address-virtual 44:39:39:ff:00:24 10.2.4.1/24
+    vlan-id 24
+    vlan-raw-device bridge
+    vrf evpn-vrf
+
+
+# VxLAN Tunnel for Server1-Server3 (Vlan 13)
+auto vni13
+iface vni13
+  mtu 9000
+  vxlan-id 13
+  vxlan-local-tunnelip 10.0.0.135
+  bridge-access 13
+  bridge-learning off
+  bridge-arp-nd-suppress on
+  mstpctl-bpduguard yes
+  mstpctl-portbpdufilter yes
+
+#VxLAN Tunnel for Server2-Server4 (Vlan 24)
+auto vni24
+iface vni24
+  mtu 9000
+  vxlan-id 24
+  vxlan-local-tunnelip 10.0.0.135
+  bridge-access 24
+  bridge-arp-nd-suppress on
+  bridge-learning off
+  mstpctl-bpduguard yes
+  mstpctl-portbpdufilter yes
+  bridge-arp-nd-suppress on
+

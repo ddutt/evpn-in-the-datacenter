@@ -1,0 +1,34 @@
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet static
+  address 192.168.0.33
+  netmask 255.255.255.0 
+
+auto eth1
+iface eth1 inet manual
+  bond-master uplink
+  # Required for Vagrant
+  post-up ip link set promisc on dev eth1
+
+auto eth2
+iface eth2 inet manual
+  bond-master uplink
+  # Required for Vagrant
+  post-up ip link set promisc on dev eth2
+
+auto uplink
+iface uplink inet static
+  mtu 9000
+  bond-slaves none
+  bond-mode 802.3ad
+  bond-miimon 100
+  bond-lacp-rate 1
+  bond-min-links 1
+  bond-xmit-hash-policy layer3+4
+  address 10.1.3.103
+  netmask 255.255.255.0
+  post-up ip route add 10.2.4.0/24 via 10.1.3.1
+  post-up ip route add 172.16.1.0/24 via 10.1.3.1
+
