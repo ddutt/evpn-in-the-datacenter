@@ -1,10 +1,20 @@
-# Cumulus Linux Demo Framework
+# EVPN in the Datacenter 
 ![Reference Topology](./documentation/cldemo_topology.png "Reference Topology")
 
 
-Welcome to the Cumulus Linux Demo Framework, which provides virtual demos of features and 
-configurations with Cumulus Linux. Follow the [Prerequisites and Getting Started](#prerequisites-and-getting-started) 
-instructions below to get started.
+This repository contains configuration code with Ansible playbooks to deploy EVPN in the sample Clos topology shown in figure 6-1 of chapter 6 of the O'Reilly book 'EVPN in the Datacenter'. 
+
+Using this assumes two critical pieces of software are installed on your computer, specifically:
+* [Vagrant](http://www.vagrantup.com)
+* [Virtualbox](http://www.virtualbox.org) (or if you're on a Linux machine, [KVM](https://www.linux-kvm.org/page/Main_Page))
+
+The section on [Prerequisies](#prerequisites-and-getting-started) describes how to install these pieces of software on your desktop/laptop. Running the entire simulation uses up at least 8GB of RAM on your computer. There are two configuration options included in this repository:
+* Centralized Routing -- This uses the exit leaves exit01/exit02 as EVPN routers while the leaves are all doing EVPN bridging only
+* Distributed Routing -- All the leaves do both EVPN routing and bridging, while the exit leaves provide the default route
+
+Further details are provided below for each of these.
+
+The Ansible playbooks are just glorified file copies. These playbooks are not meant to demonstrate network automation, but to keep things simple so that anyone can follow them. Basically, the playbooks copy the files provided under the config directory of each of the demos to the specific machines and reload interfaces and FRR. You can look at the configurations directly in the config directory for the specific machine without launching the VMs as well. Launching the VMs allows you to see the actual working of EVPN in a somewhat realistic, yet simple topology. You can also modify the configuration and see the effects of those changes. 
 
 ## Table of Conents
 
@@ -25,8 +35,10 @@ instructions below to get started.
   * [How are IP addresses Allocated?](#how-are-ip-addresses-allocated)
   * [Tips on Managing the VMs in the Topology](#tips-on-managing-the-vms-in-the-topology)
   * [Can I Preserve my Configuration?](#can-i-preserve-my-configuration)
+  * [Switching Between the Demos](#switching-between-the-demos)
   * [Running More Than One Simulation at Once](#running-more-than-one-simulation-at-once)
   * [How Can I Customize the Topology?](#how-can-i-customize-the-topology)
+  * [How Is This Different From Standard Cumulus Demos?](#How Is This Different From Standard Cumulus Demos?)
 * [Quick Start](#quick-start)
 
 ## Prerequisites and Getting Started
@@ -39,30 +51,13 @@ instructions below to get started.
 ## Available Demos
 
 Once you've followed the above prerequisite/getting-started instructions for your system, 
-you are able to run any of the demos below. 
+you are able to run either of the demos below. 
 
 Demos are built upon the Reference Topology as a starting point and then layer specific 
 device configuration on top.
 
-* **[Cldemo-config-routing](https://github.com/CumulusNetworks/cldemo-config-routing)** -- This Github repository contains the configuration files necessary for setting up Layer 3 routing on a CLOS topology using Cumulus Linux and Quagga.
-* **[Cldemo-config-mlag](https://github.com/CumulusNetworks/cldemo-config-mlag)** -- This demo shows a topology using MLAG to dual-connect hosts at Layer 2 to two top of rack leafs and uses BGP unnumbered/L3 for everything above the leaf layer.
-* **[Cldemo-roh-ansible](https://github.com/CumulusNetworks/cldemo-roh-ansible)** --  This demo shows a topology using 'Routing on the Host' to add host reachability directly into a BGP routed fabric.
-* **[Cldemo-roh-docker](https://github.com/CumulusNetworks/cldemo-roh-docker)** -- This demo shows how to redistribute docker bridges into a Routing on the Host container to advertise host container subnets into a BGP routed fabric.
-* **[Cldemo-roh-dad](https://github.com/CumulusNetworks/cldemo-roh-dad)** -- *COMING SOON!* This demo shows how to dynamically advertise host-routes for container IP addresses into a Routing on the Host Container to advertise containers into a BGP routed fabric.
-* **[Cldemo-automation-puppet](https://github.com/CumulusNetworks/cldemo-automation-puppet)** -- This demo demonstrates how to write a manifest using Puppet to configure switches running Cumulus Linux and servers running Ubuntu.
-* **[Cldemo-automation-ansible](https://github.com/CumulusNetworks/cldemo-automation-ansible)** -- This demo demonstrates how to write a playbook using Ansible to configure switches running Cumulus Linux and servers running Ubuntu.
-* **[Cldemo-automation-chef](https://github.com/CumulusNetworks/cldemo-automation-chef)** -- This demo demonstrates how to write a set of cookbooks using Chef to configure switches running Cumulus Linux and servers running Ubuntu.
-* **[Cldemo-puppet-enterprise](https://github.com/CumulusNetworks/cldemo-puppet-enterprise)** -- This demo demonstrates how to setup Puppet Enterprise to control Cumulus Linux switches with Puppet manifests.
-* **[Cldemo-ansible-tower](https://github.com/CumulusNetworks/cldemo-ansible-tower)** -- This demo demonstrates how to setup Ansible Tower to control Cumulus Linux switches with Ansible playbooks.
-* **[Cldemo-openstack](https://github.com/CumulusNetworks/cldemo-openstack)** -- Installs Openstack Mitaka on servers networked via Cumulus Linux
-* **[Cldemo-onie-ztp-ptm](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)** -- This demo demonstrates how to configure an out of band management network to automatically install and configure Cumulus Linux using Zero Touch Provisioning, and validate the cabling of the switches using Prescriptive Topology Manager.
-* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric.
-* **[Cldemo-pim](https://github.com/CumulusNetworks/cldemo-pim)** -- This demo implements Cumulus Linux PIM EA version. The demo includes simple python applications to simulate multicast senders and receivers.
-* **[Cldemo-evpn](https://github.com/CumulusNetworks/cldemo-evpn)** -- This demo implements EVPN on Cumulus Linux.  This demo is standalone and does not require cldemo-vagrant.
-* **[Cldemo-dynamic-ansible-inventory](https://github.com/CumulusNetworks/cldemo-dynamic-ansible-inventory)** -- A demonstration of using Ansible with external data sources, specifically Redis or MySQL databases.
-* **[Cldemo-docker-macvlan](https://github.com/CumulusNetworks/cldemo-docker-macvlan)** -- A demonstration of advertising docker containers using the macvlan networking option.
-* **[NetQDemo-1.0](https://github.com/CumulusNetworks/netqdemo-1.0)** -- Demos using NetQ. **NOTE: The NetQ VM is available for Cumulus Customers**
-* **[cldemo-evpn-symmetric](https://github.com/CumulusNetworks/cldemo-evpn-symmetric)** -- Provides a setup to show a VXLAN Routing with EVPN environment using the symmetric IRB model. 
+* Centralized Routing -- This is under the cldemo-evpn-centralized directory on the oob-mgmt-server under the directory /home/cumulus/ansible
+* Distributed Routing -- This is under the cldemo-evpn-distributed directory on the oob-mgmt-server under the directory /home/cumulus/ansible
 
 
 ## Frequently Asked Questions
@@ -194,9 +189,12 @@ or
 
 **This command will not show configuration for third-party applications.**
 
+### Switching Between the Demos
+You can switch between the centralized and distributed demos in the same simulation. To do this, run the ansible playbook 'reset.yml' before running 'run-demo.yml'.
+
 ### Running More Than One Simulation At Once
 Using this demo environment, it is possible to run multiple simulations at once. The procedure varies
-slightly from hypervisor to hypervisor.
+slightly from hypervisor to hypervisor. 
 
 #### Virtualbox
 In the Vagrantfile built for Virtualbox there is a line which sets `simid= [some integer]` in order to
@@ -219,22 +217,14 @@ from 8000-10000 --> 30000-32000.
 
 
 ### How Can I Customize the Topology?
-This Vagrant topology is built using [Topology Converter](https://github.com/cumulusnetworks/topology_converter).
+
 To create your own arbitrary topology, we recommend using Topology Converter. This will create a new 
 Vagrantfile which is specific to your environment.For more details on how to make customized 
 topologies, read Topology Converter's [documentation](https://github.com/CumulusNetworks/topology_converter/tree/master/documentation).
 
-#### **Advanced Users ONLY: ** Editing the existing topology
-This can be a bit tricky, to edit the existing topologies you can bring in the required portions of [Topology Converter](https://github.com/cumulusnetworks/topology_converter) needed to get the job done.
-The process looks like what is featured below and is also found in the `build.sh` script used to rebuild and update this environment.
+### How Is This Different From Standard Cumulus Demos?
 
-    vagrant destroy -f
-    wget https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/topology_converter.py
-    mkdir ./templates/
-    wget -O ./templates/Vagrantfile.j2 https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/templates/Vagrantfile.j2
-    # edit topology.dot as desired
-    python topology_converter.py topology.dot
-
+This repository is based off of Cumulus cldemo-vagrant, but is not identical. Specifically, this is geared towards a simplified installation of the EVPN demo. The helper scripts have been modified for this specific use. 
 
 ## Quick Start:
 Before running this demo or any of the other demos in the list below, install
@@ -246,15 +236,22 @@ conflict with Virtualbox's ability to create 64-bit VMs.**
 
 ### Provision the Topology and Log-in
 
-    git clone https://github.com/cumulusnetworks/cldemo-vagrant
-    cd cldemo-vagrant
-    vagrant up oob-mgmt-server oob-mgmt-switch leaf01
-    vagrant ssh oob-mgmt-server
-    ssh leaf01
+    git clone https://github.com/ddutt/evpn-in-the-datacenter.git
+    cd evpn-in-the-datacenter
+    vagrant up
+    vagrant ssh
+	su - cumulus
+	cd cldemo-evpn-distributed
+	ansible-playbook run-demo.yml
+    ssh server01
+	ping 10.1.3.103
+	ping 10.2.4.104
+	
+For a smaller topology, replace 'vagrant up' with 'vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 internet server01 server03'. This takes up at least 4GB of RAN.	
 
 ---
 
->©2017 Cumulus Networks. CUMULUS, the Cumulus Logo, CUMULUS NETWORKS, and the Rocket Turtle Logo 
+>©2018 Cumulus Networks. CUMULUS, the Cumulus Logo, CUMULUS NETWORKS, and the Rocket Turtle Logo 
 (the “Marks”) are trademarks and service marks of Cumulus Networks, Inc. in the U.S. and other 
 countries. You are not permitted to use the Marks without the prior written consent of Cumulus 
 Networks. The registered trademark Linux® is used pursuant to a sublicense from LMI, the exclusive 
