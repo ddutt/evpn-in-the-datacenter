@@ -1,5 +1,5 @@
 auto lo
-iface lo inet loopback
+iface lo inet static
    address 10.0.0.100/32
 
 auto eth0
