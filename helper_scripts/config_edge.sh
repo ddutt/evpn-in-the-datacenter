@@ -77,7 +77,7 @@ sudo systemctl start ntp.service
 wget://github.com/FRRouting/frr/releases/download/frr-4.0/frr_4.0-1.ubuntu16.04.1_amd64.deb
 sudo apt-get -y install libc-ares2
 sudo dpkg -i frr_4.0-1.ubuntu16.04.1_amd64.deb
-cat << EOT > /etc/sysctl.d/ip_forward.conf
+cat << EOT > /etc/sysctl.d/10-ip-forward.conf
 net.ipv4.ip_forward=1
 net.ipv6.conf.all.forwarding=1
 EOT
