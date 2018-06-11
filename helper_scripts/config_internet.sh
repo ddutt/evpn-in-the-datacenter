@@ -36,8 +36,9 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzH+R+UhjVicUtI0daNUcedYhfvgT1dbZXgY
 chmod 700 -R /home/cumulus/.ssh
 chown cumulus:cumulus -R /home/cumulus/.ssh
 
-# Allow real access to the Internet 
-echo -e 'iptables -t nat -A POSTROUTING -o swp48 -j MASQUERADE' > /etc/rc.local
+# Allow real access to the Internet
+echo -e '#!/bin/sh' > /etc/rc.local
+echo -e 'iptables -t nat -A POSTROUTING -o swp48 -j MASQUERADE' >> /etc/rc.local
 
 echo "#################################"
 echo "   Finished "

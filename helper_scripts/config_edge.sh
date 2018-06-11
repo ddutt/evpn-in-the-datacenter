@@ -78,6 +78,7 @@ wget://github.com/FRRouting/frr/releases/download/frr-4.0/frr_4.0-1.ubuntu16.04.
 sudo apt-get -y install libc-ares2
 sudo dpkg -i frr_4.0-1.ubuntu16.04.1_amd64.deb
 cat << EOT > /etc/rc.local
+#!/bin/sh
 sysctl -w net.ipv4.ip_forward=1
 sysctl -w net.ipv6.conf.all.forwarding=1
 EOT

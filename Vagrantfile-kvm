@@ -137,7 +137,7 @@ Vagrant.configure("2") do |config|
     device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
 
     # Copy the config files
-    device.vm.provision "file", source: "ansible", destination: "/home/vagrant/"
+    device.vm.provision "file", source: "ansible", destination: "$HOME/"
 
     # Change permissions on the copied files
     device.vm.provision "shell", inline: "sudo mv ansible /home/cumulus; chown -R cumulus /home/cumulus/ansible"

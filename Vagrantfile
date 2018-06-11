@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
     device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
 
     # Copy the config files
-    device.vm.provision "file", source: "ansible", destination: "$HOME"
+    device.vm.provision "file", source: "ansible", destination: "$HOME/"
 
     # Install Rules for the interface re-map
     device.vm.provision :shell , :inline => <<-delete_udev_directory
