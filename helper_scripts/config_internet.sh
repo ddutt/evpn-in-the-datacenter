@@ -37,7 +37,7 @@ chmod 700 -R /home/cumulus/.ssh
 chown cumulus:cumulus -R /home/cumulus/.ssh
 
 # Allow real access to the Internet 
-echo -e 'iptables -t nat -A POSTROUTING -o swp48 -j MASQUERADE' >> /etc/rc.local
+echo -e 'iptables -t nat -A POSTROUTING -o swp48 -j MASQUERADE' > /etc/rc.local
 
 echo "#################################"
 echo "   Finished "
