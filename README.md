@@ -18,6 +18,7 @@ The Ansible playbooks are just glorified file copies. These playbooks are not me
 
 ## Table of Conents
 
+* [Quick Start](#quick-start)
 * [Prerequisites and Getting Started](#prerequisites-and-getting-started)
   * [Windows](./documentation/windows)
   * [MacOS](./documentation/macos/)
@@ -35,8 +36,36 @@ The Ansible playbooks are just glorified file copies. These playbooks are not me
   * [Switching Between the Demos](#switching-between-the-demos)
   * [Running More Than One Simulation at Once](#running-more-than-one-simulation-at-once)
   * [How Can I Customize the Topology?](#how-can-i-customize-the-topology)
-  * [How Is This Different From Standard Cumulus Demos?](#How Is This Different From Standard Cumulus Demos?)
-* [Quick Start](#quick-start)
+  * [How Is This Different From Standard Cumulus Demos?](#how-is-this-different-from-standard-cumulus-demos)
+
+## Quick Start:
+If you've installed the appropiate software listed in the [pre-requisites](#prerequisites-and-getting-started) section, then:
+
+**NOTE: On Windows, if you have HyperV enabled, you will need to disable it as it will
+conflict with Virtualbox's ability to create 64-bit VMs.**
+
+### Provision the Topology and Log-in
+
+    git clone https://github.com/ddutt/evpn-in-the-datacenter.git
+    cd evpn-in-the-datacenter
+    vagrant up
+    vagrant ssh
+	su - cumulus
+	cd ansible/cldemo-evpn-distributed
+	ansible-playbook run-demo.yml
+    ssh server01
+	ping 10.1.3.103
+	ping 10.2.4.104
+	ping 10.0.0.253
+	ping www.google.com
+
+The pings are ordered to verify that:
+* EVPN bridging works across racks
+* EVPN RT-2 based routing works
+* EVPN RT-5 routing works to reach the internet node
+* EVPN RT-5 routing works to reach the Internet
+
+For a smaller topology, replace `vagrant up` with `vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 server01 server03`. This takes up at least 4GB of RAN.	
 
 ## Prerequisites and Getting Started
 
@@ -189,30 +218,7 @@ topologies, read Topology Converter's [documentation](https://github.com/Cumulus
 
 ### How Is This Different From Standard Cumulus Demos?
 
-This repository is based off of Cumulus cldemo-vagrant, but is not identical. Specifically, this is geared towards a simplified installation of the EVPN demo. The helper scripts have been modified for this specific use. 
-
-## Quick Start:
-Before running this demo or any of the other demos in the list below, install
-[VirtualBox](https://www.virtualbox.org/wiki/Download_Old_Builds) and
-[Vagrant](https://releases.hashicorp.com/vagrant/).
-
-**NOTE: On Windows, if you have HyperV enabled, you will need to disable it as it will
-conflict with Virtualbox's ability to create 64-bit VMs.**
-
-### Provision the Topology and Log-in
-
-    git clone https://github.com/ddutt/evpn-in-the-datacenter.git
-    cd evpn-in-the-datacenter
-    vagrant up
-    vagrant ssh
-	su - cumulus
-	cd cldemo-evpn-distributed
-	ansible-playbook run-demo.yml
-    ssh server01
-	ping 10.1.3.103
-	ping 10.2.4.104
-	
-For a smaller topology, replace `vagrant up` with `vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 server01 server03`. This takes up at least 4GB of RAN.	
+This repository is based off of Cumulus cldemo-vagrant, but is not identical. Specifically, this is geared towards a simplified installation of the EVPN demo. The helper scripts have been modified for this specific use.
 
 ---
 
