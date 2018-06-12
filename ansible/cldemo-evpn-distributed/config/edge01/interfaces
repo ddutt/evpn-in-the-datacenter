@@ -4,6 +4,8 @@ iface lo inet static
 
 auto eth0
 iface eth0 inet dhcp
+   # We want to use the default learnt from the internet router, not OOB management
+   post-up ip route del default
 
 auto eth1
 iface eth1 inet manual
