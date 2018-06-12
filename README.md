@@ -67,7 +67,11 @@ The pings are ordered to verify that:
 * EVPN RT-5 routing works to reach the internet node
 * EVPN RT-5 routing works to reach the Internet
 
-For a smaller topology, replace `vagrant up` with `vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf03 spine01 spine02 exit01 server01 server03`. This takes up at least 4GB of RAN.	
+### Small Topology
+
+For a smaller topology, replace `vagrant up` with `vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf02 spine01 spine02 exit01 server01 server02`. This takes up at least 4GB of RAN. 
+
+You cannot ping the internet node or external nodes with this. But you can test centralized routing. 
 
 ## Prerequisites and Getting Started
 

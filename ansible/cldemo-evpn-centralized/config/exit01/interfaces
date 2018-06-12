@@ -1,7 +1,7 @@
 auto lo
 iface lo inet loopback
 	address 10.0.0.41/32
-	clagd-vxlan-anycast-ip 10.0.0.135
+	address 10.0.0.135/32
 
 auto eth0
 iface eth0 inet dhcp
@@ -22,28 +22,11 @@ iface internet-vrf
 	address 10.0.0.41/32
 	vrf-table auto
 
-# CLAG Peerlink bond
-auto peerlink
-iface peerlink
-  mtu 9000
-  bond-slaves swp49 swp50
-
-# CLAG Peerlink L2 interface.
-# This creates VLAN 4094 that only lives on the peerlink bond
-# No other interface will be aware of VLAN 4094
-auto peerlink.4094
-iface peerlink.4094
-  address 169.254.1.1/30
-  clagd-peer-ip 169.254.1.2
-  clagd-backup-ip 10.0.0.42
-  clagd-sys-mac 44:39:39:ff:40:96
-  clagd-priority 100
-
 auto bridge
 iface bridge
 	bridge-vlan-aware yes
 	bridge-vids 1-4, 13, 24
-	bridge-ports swp1 vni13 vni24 peerlink
+	bridge-ports swp1 vni13 vni24
 
 auto swp1
 iface swp1
@@ -116,5 +99,5 @@ iface vni24
   bridge-learning off
   mstpctl-bpduguard yes
   mstpctl-portbpdufilter yes
-  bridge-arp-nd-suppress on
+
 
