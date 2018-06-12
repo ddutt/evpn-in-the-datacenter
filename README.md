@@ -2,7 +2,7 @@
 ![Reference Topology](./documentation/cldemo_topology.png "Reference Topology")
 
 
-This repository contains configuration code with Ansible playbooks to deploy EVPN in the sample Clos topology shown in figure 6-1 of chapter 6 of the O'Reilly book 'EVPN in the Data Center'. 
+This repository contains configuration code with Ansible playbooks to deploy EVPN in the sample Clos topology shown in figure 6-1 of chapter 6 of the O'Reilly book [EVPN in the Data Center](https://cumulusnetworks.com/evpn-data-center-oreilly/).
 
 Using this assumes two critical pieces of software are installed on your computer, specifically:
 * [Vagrant](http://www.vagrantup.com)
@@ -13,6 +13,8 @@ The section on [Prerequisies](#prerequisites-and-getting-started) describes how 
 There are two demo options included in this repository:
 * **[Centralized Routing](./ansible/cldemo-evpn-centralized)** -- This uses the exit leaves exit01/exit02 as EVPN routers while the leaves do EVPN bridging only
 * **[Distributed Routing](./ansible/cldemo-evpn-distributed)** -- All the leaves do both EVPN routing and bridging, while the exit leaves provide the default route
+
+**The individual demo pages contains a bunch of additional information such as descriptions of outputs and how to find information in FRR which is not included in the book.**
 
 The Ansible playbooks are just glorified file copies. These playbooks are not meant to demonstrate network automation, but to keep things simple so that anyone can follow them. Basically, the playbooks copy the files provided under the config directory of each of the demos to the specific machines and reload interfaces and FRR. You can look at the configurations directly in the config directory for the specific machine without launching the VMs as well. Launching the VMs allows you to see the actual working of EVPN in a somewhat realistic, yet simple topology. You can also modify the configuration and see the effects of those changes. 
 
