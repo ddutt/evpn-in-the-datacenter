@@ -46,6 +46,8 @@ If you've installed the appropiate software listed in the [pre-requisites](#prer
 **NOTE: On Windows, if you have HyperV enabled, you will need to disable it as it will
 conflict with Virtualbox's ability to create 64-bit VMs.**
 
+**NOTE: If you're using Cumulus VX version 3.6.0 or 3.6.1, passwordless access is broken. You need to run the ansible-playbook with -k -K options and provide the default password when prompted**
+
 ### Provision the Topology and Log-in
 
     git clone https://github.com/ddutt/evpn-in-the-datacenter.git
@@ -60,6 +62,8 @@ conflict with Virtualbox's ability to create 64-bit VMs.**
 	ping 10.2.4.104
 	ping 10.0.0.253
 	ping www.google.com
+
+The default password is CumulusLinux!.
 
 The pings are ordered to verify that:
 * EVPN bridging works across racks
