@@ -36,3 +36,9 @@ spine
 exit
 edge
 internetrouter
+
+[network:vars]
+ansible_user=cumulus
+ansible_password=CumulusLinux!
+ansible_sudo_pass=CumulusLinux!
+
